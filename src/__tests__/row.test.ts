@@ -1,6 +1,14 @@
 import knex from "knex";
-import { getConnection, setConnection } from "../connection";
-import { Row, findAll, find, insertAll, insert, countAll } from "../row";
+import {
+  getConnection,
+  setConnection,
+  Row,
+  findAll,
+  find,
+  insertAll,
+  insert,
+  countAll,
+} from "..";
 
 const testConnection = knex({
   client: "mysql2",
