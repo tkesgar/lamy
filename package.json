@@ -1,0 +1,65 @@
+{
+  "name": "@tkesgar/lamy",
+  "version": "0.0.0",
+  "description": "Lightweight row interface for Knex.js",
+  "keywords": [
+    "knex",
+    "database"
+  ],
+  "license": "MIT",
+  "author": "Ted Kesgar <t.kesgar@hey.com> (https://tkesgar.com)",
+  "contributors": [
+    "Ted Kesgar <t.kesgar@hey.com> (https://tkesgar.com)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tkesgar/lamy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tkesgar/lamy/issues"
+  },
+  "homepage": "https://github.com/tkesgar/lamy#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=12"
+  },
+  "files": [
+    "dist/**"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "watch": "tsc -w",
+    "lint": "eslint . --ext .js,.ts",
+    "format": "prettier --write '**/*'",
+    "test": "jest",
+    "clean": "rm -rf dist/**",
+    "build": "tsc",
+    "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "@types/jest": "^26.0.14",
+    "@types/node": "^14.11.1",
+    "@typescript-eslint/eslint-plugin": "^4.1.1",
+    "@typescript-eslint/parser": "^4.1.1",
+    "conventional-changelog-cli": "^2.1.0",
+    "eslint": "^7.9.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-jest": "^24.0.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^4.3.0",
+    "jest": "^26.4.2",
+    "knex": "^0.21.6",
+    "lint-staged": "^10.4.0",
+    "prettier": "~2.1.2",
+    "ts-jest": "^26.3.0",
+    "typescript": "^4.0.3"
+  },
+  "peerDependencies": {
+    "knex": "0.x"
+  }
+}
