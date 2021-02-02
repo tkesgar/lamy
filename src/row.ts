@@ -1,5 +1,5 @@
 import Knex, { QueryBuilder } from "knex";
-import { getConnection, Connection, ConnectionOpts } from "./connection";
+import { Connection, ConnectionOpts } from ".";
 
 type RowValue = unknown | number | boolean | string | Date | Knex.Raw;
 
@@ -7,15 +7,15 @@ type IdType = number | string;
 
 type QueryFunction = (this: QueryBuilder) => QueryBuilder | void;
 
-interface SelectOpts {
+interface SelectOpts extends ConnectionOpts {
   tableName: string;
-  conn?: Connection;
   where?: QueryFunction;
   includeDeleted?: boolean;
 }
 
-interface RowConstructorOpts {
-  conn?: Connection;
+interface RowConstructorOpts extends ConnectionOpts {
+  tableName: string;
+  rowData: RowData;
   primaryCols?: string[];
 }
 
@@ -33,12 +33,8 @@ export class Row<T extends IdType = number> {
 
   private conn: Connection;
 
-  constructor(
-    tableName: string,
-    rowData: RowData,
-    opts: RowConstructorOpts = {}
-  ) {
-    const { conn = getConnection(), primaryCols = ["id"] } = opts;
+  constructor(opts: RowConstructorOpts) {
+    const { conn, tableName, rowData, primaryCols = ["id"] } = opts;
 
     this.initialConn = conn;
     this.primaryCols = primaryCols;
@@ -144,8 +140,8 @@ export async function findAll<T extends IdType = number>(
   opts: FindAllOpts
 ): Promise<Row<T>[]> {
   const {
+    conn,
     tableName,
-    conn = getConnection(),
     where = null,
     includeDeleted = false,
     pagination = null,
@@ -166,7 +162,7 @@ export async function findAll<T extends IdType = number>(
     query.limit(limit).offset((page - 1) * limit);
   }
 
-  return (await query).map((rowData) => new Row(tableName, rowData));
+  return (await query).map((rowData) => new Row({ tableName, rowData, conn }));
 }
 
 export async function find<T extends IdType = number>(
@@ -182,8 +178,8 @@ interface CountAllOpts extends SelectOpts {
 
 export async function countAll(opts: CountAllOpts): Promise<number> {
   const {
+    conn,
     tableName,
-    conn = getConnection(),
     where = null,
     includeDeleted = false,
     countBy = ["id"],
@@ -208,9 +204,9 @@ export async function countAll(opts: CountAllOpts): Promise<number> {
 export async function insertAll(
   tableName: string,
   rowData: RowData[],
-  opts: ConnectionOpts = {}
+  opts: ConnectionOpts
 ): Promise<void> {
-  const { conn = getConnection() } = opts;
+  const { conn } = opts;
 
   await conn(tableName).insert(rowData);
 }
@@ -218,9 +214,9 @@ export async function insertAll(
 export async function insert(
   tableName: string,
   rowData: RowData,
-  opts: ConnectionOpts = {}
+  opts: ConnectionOpts
 ): Promise<number> {
-  const { conn = getConnection() } = opts;
+  const { conn } = opts;
 
   const [id] = await conn(tableName).insert(rowData);
   return id;
