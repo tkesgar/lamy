@@ -1,3 +1,16 @@
+# [0.2.0](https://github.com/tkesgar/lamy/compare/v0.1.1...v0.2.0) (2021-02-02)
+
+### Features
+
+- remove global connection object
+  ([0cedcf8](https://github.com/tkesgar/lamy/commit/0cedcf8514aaacf870c5dc929ce83d4dd38f6bad))
+
+### BREAKING CHANGES
+
+- - Global getConnection and setConnection will be not available anymore.
+
+* Interface for Row and query methods has been changed.
+
 ## [0.1.1](https://github.com/tkesgar/lamy/compare/v0.1.0...v0.1.1) (2020-10-08)
 
 ### Bug Fixes
