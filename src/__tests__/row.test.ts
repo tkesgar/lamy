@@ -140,6 +140,27 @@ describe("getConnection() test", () => {
         ).toBeUndefined();
       }
     });
+
+    it("should call before if provided (order by name)", async () => {
+      const rows = (
+        await findAll({
+          conn,
+          tableName: "kansen",
+          before(query) {
+            query.orderBy("name", "desc");
+          },
+        })
+      ).map((row) => [row.id, row.getColumn("name")]);
+
+      expect(rows).toEqual([
+        [3, "Z23"],
+        [4, "Prinz Eugen"],
+        [5, "Odin"],
+        [2, "Leipzig"],
+        [1, "Karlsruhe"],
+        [6, "Friedrich der Große"],
+      ]);
+    });
   });
 
   describe("find", () => {

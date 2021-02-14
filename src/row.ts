@@ -11,6 +11,7 @@ interface SelectOpts extends ConnectionOpts {
   tableName: string;
   where?: QueryFunction;
   includeDeleted?: boolean;
+  before?: (query: QueryBuilder) => void;
 }
 
 interface RowConstructorOpts extends ConnectionOpts {
@@ -145,6 +146,7 @@ export async function findAll<T extends IdType = number>(
     where = null,
     includeDeleted = false,
     pagination = null,
+    before = null,
   } = opts;
 
   const query = conn(tableName);
@@ -160,6 +162,10 @@ export async function findAll<T extends IdType = number>(
   if (pagination) {
     const { limit = DEFAULT_PAGINATION_LIMIT, page = 1 } = pagination;
     query.limit(limit).offset((page - 1) * limit);
+  }
+
+  if (before) {
+    before(query);
   }
 
   return (await query).map((rowData) => new Row({ tableName, rowData, conn }));
