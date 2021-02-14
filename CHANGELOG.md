@@ -1,3 +1,12 @@
+# [0.3.0](https://github.com/tkesgar/lamy/compare/v0.2.0...v0.3.0) (2021-02-14)
+
+### Features
+
+- add before hook to `find` and `findAll`
+  ([661b73e](https://github.com/tkesgar/lamy/commit/661b73ef18ac2d1f05fb3a80e0691d0e316186f0))
+- allow custom column names
+  ([b298948](https://github.com/tkesgar/lamy/commit/b298948af6aa17d2f819976cbc80d3d1867a73dd))
+
 # [0.2.0](https://github.com/tkesgar/lamy/compare/v0.1.1...v0.2.0) (2021-02-02)
 
 ### Features

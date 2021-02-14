@@ -1,6 +1,6 @@
 {
   "name": "@tkesgar/lamy",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Lightweight row interface for Knex.js",
   "keywords": [
     "knex",
