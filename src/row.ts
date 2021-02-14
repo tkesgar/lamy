@@ -11,19 +11,32 @@ interface SelectOpts extends ConnectionOpts {
   tableName: string;
   where?: QueryFunction;
   includeDeleted?: boolean;
+  includeDeletedCol?: string;
   before?: (query: QueryBuilder) => void;
+}
+
+export const DEFAULT_PAGINATION_LIMIT = 20;
+
+export const ID_COL = "id";
+
+export const TIME_CREATED_COL = "time_created";
+
+export const TIME_UPDATED_COL = "time_updated";
+
+export const TIME_DELETED_COL = "time_deleted";
+
+export interface RowData {
+  [key: string]: RowValue;
 }
 
 interface RowConstructorOpts extends ConnectionOpts {
   tableName: string;
   rowData: RowData;
   primaryCols?: string[];
-}
-
-export const DEFAULT_PAGINATION_LIMIT = 20;
-
-export interface RowData {
-  [key: string]: RowValue;
+  idCol?: string;
+  timeCreatedCol?: string;
+  timeUpdatedCol?: string;
+  timeDeletedCol?: string;
 }
 
 export class Row<T extends IdType = number> {
@@ -31,17 +44,34 @@ export class Row<T extends IdType = number> {
   private readonly primaryCols: string[];
   private readonly tableName: string;
   private readonly rowData: RowData;
+  private readonly idCol: string;
+  private readonly timeCreatedCol: string;
+  private readonly timeUpdatedCol: string;
+  private readonly timeDeletedCol: string;
 
   private conn: Connection;
 
   constructor(opts: RowConstructorOpts) {
-    const { conn, tableName, rowData, primaryCols = ["id"] } = opts;
+    const {
+      conn,
+      tableName,
+      rowData,
+      idCol = ID_COL,
+      timeCreatedCol = TIME_CREATED_COL,
+      timeUpdatedCol = TIME_UPDATED_COL,
+      timeDeletedCol = TIME_DELETED_COL,
+      primaryCols = [idCol],
+    } = opts;
 
     this.initialConn = conn;
     this.primaryCols = primaryCols;
     this.tableName = tableName;
     this.rowData = rowData;
     this.conn = conn;
+    this.idCol = idCol;
+    this.timeCreatedCol = timeCreatedCol;
+    this.timeUpdatedCol = timeUpdatedCol;
+    this.timeDeletedCol = timeDeletedCol;
   }
 
   get connection(): Connection {
@@ -67,19 +97,19 @@ export class Row<T extends IdType = number> {
   }
 
   get id(): T {
-    return this.getColumn<T>("id");
+    return this.getColumn<T>(this.idCol);
   }
 
   get timeCreated(): Date {
-    return this.getColumn<Date>("time_created");
+    return this.getColumn<Date>(this.timeCreatedCol);
   }
 
   get timeUpdated(): Date {
-    return this.getColumn<Date>("time_updated");
+    return this.getColumn<Date>(this.timeUpdatedCol);
   }
 
   get timeDeleted(): Date {
-    return this.getColumn<Date>("time_deleted");
+    return this.getColumn<Date>(this.timeDeletedCol);
   }
 
   get primaryKey(): RowData {
@@ -118,11 +148,11 @@ export class Row<T extends IdType = number> {
   }
 
   async delete(): Promise<void> {
-    await this.setColumns({ time_deleted: this.connection.fn.now() });
+    await this.setColumns({ [this.timeDeletedCol]: this.connection.fn.now() });
   }
 
   async restore(): Promise<void> {
-    await this.setColumns({ time_deleted: null });
+    await this.setColumns({ [this.timeDeletedCol]: null });
   }
 
   async deletePermanently(): Promise<void> {
@@ -145,6 +175,7 @@ export async function findAll<T extends IdType = number>(
     tableName,
     where = null,
     includeDeleted = false,
+    includeDeletedCol = TIME_DELETED_COL,
     pagination = null,
     before = null,
   } = opts;
@@ -156,7 +187,7 @@ export async function findAll<T extends IdType = number>(
   }
 
   if (!includeDeleted) {
-    query.whereNull("time_deleted");
+    query.whereNull(includeDeletedCol);
   }
 
   if (pagination) {
@@ -188,7 +219,8 @@ export async function countAll(opts: CountAllOpts): Promise<number> {
     tableName,
     where = null,
     includeDeleted = false,
-    countBy = ["id"],
+    includeDeletedCol = TIME_DELETED_COL,
+    countBy = [ID_COL],
   } = opts;
 
   const query = conn(tableName);
@@ -198,7 +230,7 @@ export async function countAll(opts: CountAllOpts): Promise<number> {
   }
 
   if (!includeDeleted) {
-    query.whereNull("time_deleted");
+    query.whereNull(includeDeletedCol);
   }
 
   query.count({ count: Array.isArray(countBy) ? countBy : [countBy] });
