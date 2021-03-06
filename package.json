@@ -32,7 +32,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "watch": "tsc -w",
-    "lint": "eslint . --ext .js,.ts",
+    "lint": "eslint . --ext .js,.ts && tsc --noEmit",
     "format": "prettier --write '**/*'",
     "test": "jest",
     "clean": "rm -rf dist/**",

@@ -1,0 +1,31 @@
+name: CI test
+
+on:
+  push:
+    branches:
+      - yagoo
+  pull_request:
+    branches:
+      - yagoo
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Enable mysql
+        run: sudo systemctl start mysql
+      - name: Install dependencies
+        run: npm ci
+      - name: Execute linter
+        run: npm run lint
+      - name: Run tests
+        run: npm test
+      - uses: codecov/codecov-action@v1
