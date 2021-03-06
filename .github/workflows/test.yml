@@ -1,0 +1,39 @@
+name: CI test
+
+on:
+  push:
+    branches:
+      - yagoo
+  pull_request:
+    branches:
+      - yagoo
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # https://github.com/codecov/codecov-action/issues/190
+          fetch-depth: 2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      # https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2004-README.md#mysql
+      - name: Setup MySQL
+        run: |
+          sudo systemctl start mysql
+          mysql -uroot -proot -e "CREATE DATABASE lamy_test;"
+      - name: Install dependencies
+        run: npm ci
+      - name: Execute linter
+        run: npm run lint
+      - name: Run tests
+        env:
+          MYSQL_PASS: root
+        run: npm test -- --coverage
+      - uses: codecov/codecov-action@v1

@@ -1,5 +1,6 @@
-dist/
+.husky/
 coverage/
+dist/
 *.env
 .editorconfig
 .eslintignore

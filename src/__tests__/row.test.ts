@@ -1,4 +1,4 @@
-import knex from "knex";
+import knex, { Knex } from "knex";
 import { Row, findAll, find, insertAll, insert, countAll } from "..";
 
 const conn = knex({
@@ -12,7 +12,7 @@ const conn = knex({
   },
 });
 
-function createTestRow(): { row: Row; conn: knex } {
+function createTestRow(): { row: Row; conn: Knex } {
   const conn = knex({ client: "mysql2" });
 
   const row = new Row({
