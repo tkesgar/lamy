@@ -1,18 +1,18 @@
-import Knex, { QueryBuilder } from "knex";
+import { Knex } from "knex";
 import { Connection, ConnectionOpts } from ".";
 
 type RowValue = unknown | number | boolean | string | Date | Knex.Raw;
 
 type IdType = number | string;
 
-type QueryFunction = (this: QueryBuilder) => QueryBuilder | void;
+type QueryFunction = (this: Knex.QueryBuilder) => Knex.QueryBuilder | void;
 
 interface SelectOpts extends ConnectionOpts {
   tableName: string;
   where?: QueryFunction;
   includeDeleted?: boolean;
   includeDeletedCol?: string;
-  before?: (query: QueryBuilder) => void;
+  before?: (query: Knex.QueryBuilder) => void;
 }
 
 export const DEFAULT_PAGINATION_LIMIT = 20;
@@ -122,7 +122,7 @@ export class Row<T extends IdType = number> {
     return key;
   }
 
-  get query(): QueryBuilder {
+  get query(): Knex.QueryBuilder {
     return this.connection(this.tableName).where(this.primaryKey);
   }
 
