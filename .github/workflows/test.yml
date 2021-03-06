@@ -13,6 +13,9 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+        with:
+          # https://github.com/codecov/codecov-action/issues/190
+          fetch-depth: 2
       - uses: actions/cache@v2
         with:
           path: |
@@ -32,5 +35,5 @@ jobs:
       - name: Run tests
         env:
           MYSQL_PASS: root
-        run: npm test
+        run: npm test -- --coverage
       - uses: codecov/codecov-action@v1
