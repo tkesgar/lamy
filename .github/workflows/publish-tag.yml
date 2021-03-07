@@ -1,4 +1,4 @@
-name: Publish specific commit builds
+name: Publish new version tags
 
 on:
   push:
@@ -27,5 +27,4 @@ jobs:
         run: |
           npm ci
           npm run build
-          npm version
           npm publish
