@@ -1,3 +1,10 @@
+# [0.4.0](https://github.com/tkesgar/lamy/compare/v0.3.0...v0.4.0) (2021-03-07)
+
+### Features
+
+- update to knex 0.95
+  ([b08e395](https://github.com/tkesgar/lamy/commit/b08e39565ed4aaee20257633971f03716530f691))
+
 # [0.3.0](https://github.com/tkesgar/lamy/compare/v0.2.0...v0.3.0) (2021-02-14)
 
 ### Features
