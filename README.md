@@ -3,6 +3,9 @@
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/)
 [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://github.com/facebook/jest)
 
+> This package has been transferred into Charaverse as `@charaverse/knex-row`.
+> The version `0.5.0` has the exact same API.
+
 > Muh booze!
 
 lamy is a lightweight row interface for Knex.js.
