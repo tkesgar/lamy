@@ -1,3 +1,5 @@
+## [0.4.1](https://github.com/tkesgar/lamy/compare/v0.4.0...v0.4.1) (2021-11-28)
+
 # [0.4.0](https://github.com/tkesgar/lamy/compare/v0.3.0...v0.4.0) (2021-03-07)
 
 ### Features
